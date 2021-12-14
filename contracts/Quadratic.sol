@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract Quadratic {
+    uint ngoCount;
     uint amt;
     uint mPoolId;
     uint counter;
@@ -44,6 +45,7 @@ contract Quadratic {
 
     // Project[] public proj;    
     mapping(address => NGO) ngo;
+    mapping(uint => NGO) idToNGO;
     mapping(uint => Project) idToProject;
     mapping(uint => address) idToProjectAddress;
     mapping(address => Project) p;
@@ -152,9 +154,24 @@ contract Quadratic {
     function setNgo(address add, string memory n, string memory some) public { 
         NGO memory nd = NGO(n, some);
         ngo[add] = nd;
+
+        NGO memory np = NGO(n, some);
+        idToNGO[ngoCount] = np;
+
+        ngoCount++;
     }
 
     function getNGO(address a) public view returns(string memory, string memory) {
         return(ngo[a].name, ngo[a].someval);
+    }
+
+    function getAllNGOs() public returns(NGO[] memory) {
+        NGO[] memory ret = new NGO[](ngoCount);
+
+        for (uint i = 0; i < ngoCount; i++) {
+            // NGO memory ret = idToNGO[i];
+            ret[i] = idToNGO[i];
+        }
+    return ret;
     }
 }
